@@ -21,7 +21,7 @@ function ResizeHandle({ direction }: { direction: "horizontal" | "vertical" }) {
     >
       <div
         className={cn(
-          "rounded-full bg-white/0 transition-colors group-hover:bg-primary/60 group-data-[resize-handle-state=drag]:bg-primary",
+          "rounded-full bg-transparent transition-colors group-hover:bg-primary/60 group-data-[resize-handle-state=drag]:bg-primary",
           direction === "horizontal" ? "h-10 w-0.5" : "h-0.5 w-10"
         )}
       />

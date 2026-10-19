@@ -39,8 +39,8 @@ export default function ForgotPasswordPage() {
         }
         footer={backToSignIn}
       >
-        <div className="mx-auto flex size-16 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10">
-          <CheckCircle className="size-8 text-emerald-400" />
+        <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-[#248a3d]/10 dark:bg-[#30d158]/15">
+          <CheckCircle className="size-8 text-[#248a3d] dark:text-[#30d158]" />
         </div>
         <Button
           variant="outline"

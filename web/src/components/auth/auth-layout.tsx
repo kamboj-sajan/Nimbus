@@ -1,71 +1,39 @@
-import { useMemo, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
-import BrandLogo from "@/components/brand/brand-logo";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import BrandLogo, { BrandMark } from "@/components/brand/brand-logo";
+import ThemeToggle from "@/components/theme-toggle";
 
 interface AuthLayoutProps {
+  /** Small eyebrow above the title. */
   badge: string;
-  badgeIcon: LucideIcon;
+  badgeIcon?: LucideIcon;
   title: string;
   description?: ReactNode;
   children: ReactNode;
   footer?: ReactNode;
 }
 
-function Particles() {
-  // Positions are random but stable for the lifetime of the page.
-  const dots = useMemo(
-    () =>
-      Array.from({ length: 14 }, () => ({
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        animationDelay: `${Math.random() * 5}s`,
-        animationDuration: `${3 + Math.random() * 4}s`,
-      })),
-    []
-  );
+/** Apple-account style: one calm centered column, no chrome competing with the form. */
+export default function AuthLayout({ badge, title, description, children, footer }: AuthLayoutProps) {
   return (
-    <div className="pointer-events-none fixed inset-0 z-0">
-      {dots.map((style, i) => (
-        <div key={i} className="absolute size-1 animate-float rounded-full bg-primary/25" style={style} />
-      ))}
-    </div>
-  );
-}
-
-export default function AuthLayout({ badge, badgeIcon: BadgeIcon, title, description, children, footer }: AuthLayoutProps) {
-  return (
-    <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.12),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(236,72,153,0.08),transparent_50%)]" />
-      </div>
-      <Particles />
-
-      <header className="relative z-10 p-6">
-        <BrandLogo />
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <header className="border-b border-border">
+        <div className="mx-auto flex h-12 max-w-[1024px] items-center justify-between px-4 sm:px-6">
+          <BrandLogo size="sm" />
+          <ThemeToggle />
+        </div>
       </header>
 
-      <main className="relative z-10 flex min-h-[calc(100vh-120px)] items-center justify-center p-4">
-        <div className="w-full max-w-md animate-fade-in-up">
-          <div className="mb-8 text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-gradient-to-r from-blue-500/10 to-purple-500/10 px-4 py-1.5 text-sm backdrop-blur-sm">
-              <BadgeIcon className="size-4 text-sky-400" />
-              <span className="bg-gradient-to-r from-sky-400 to-purple-400 bg-clip-text font-medium text-transparent">
-                {badge}
-              </span>
-            </span>
+      <main className="flex flex-1 items-start justify-center px-4 pb-16 pt-14 sm:pt-20">
+        <div className="w-full max-w-[420px] animate-fade-in-up">
+          <div className="mb-10 text-center">
+            <BrandMark className="mx-auto mb-6 size-14 rounded-[26%]" />
+            <p className="mb-2 text-[15px] font-semibold text-muted-foreground">{badge}</p>
+            <h1 className="text-[32px] font-bold leading-tight tracking-[-0.025em] sm:text-[40px]">{title}</h1>
+            {description && <p className="mt-3 text-[17px] leading-relaxed text-muted-foreground">{description}</p>}
           </div>
-
-          <Card className="border-border/50 bg-card/60 shadow-2xl backdrop-blur-xl">
-            <CardHeader className="space-y-2 text-center">
-              <CardTitle className="text-2xl font-bold">{title}</CardTitle>
-              {description && <CardDescription>{description}</CardDescription>}
-            </CardHeader>
-            <CardContent className="space-y-5">{children}</CardContent>
-            {footer && <CardFooter className="justify-center text-sm text-muted-foreground">{footer}</CardFooter>}
-          </Card>
+          <div className="space-y-5">{children}</div>
+          {footer && <div className="mt-10 border-t border-border pt-6 text-center text-[15px] text-muted-foreground">{footer}</div>}
         </div>
       </main>
     </div>

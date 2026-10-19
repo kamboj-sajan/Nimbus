@@ -60,7 +60,7 @@ function FileTreeNode({ node, level, ...actions }: TreeActions & { node: FileNod
       <div
         className={cn(
           "group flex h-7 cursor-pointer select-none items-center gap-1.5 rounded-md pr-1 text-[13px] text-foreground/85 transition-colors hover:bg-white/[0.05]",
-          isActive && "bg-primary/15 text-foreground hover:bg-primary/20"
+          isActive && "bg-ide-active text-foreground hover:bg-ide-active"
         )}
         style={{ paddingLeft: level * 12 + 6 }}
         onClick={() => (isFolder ? toggleExpanded(node.path) : void openFile(node.path))}
@@ -96,7 +96,7 @@ function FileTreeNode({ node, level, ...actions }: TreeActions & { node: FileNod
                 setRenaming(false);
               }
             }}
-            className="h-5 min-w-0 flex-1 rounded border border-primary/60 bg-black/40 px-1 font-mono text-[12px] outline-none"
+            className="h-5 min-w-0 flex-1 rounded border border-primary/60 bg-background px-1 font-mono text-[12px] outline-none"
           />
         ) : (
           <span className="min-w-0 flex-1 truncate">{node.name}</span>
@@ -107,7 +107,7 @@ function FileTreeNode({ node, level, ...actions }: TreeActions & { node: FileNod
             <button
               type="button"
               onClick={(e) => e.stopPropagation()}
-              className="rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-white/10 hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 data-[state=open]:opacity-100"
+              className="rounded p-0.5 text-muted-foreground opacity-0 transition-opacity hover:bg-ide-hover hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 data-[state=open]:opacity-100"
               aria-label={`Actions for ${node.name}`}
             >
               <MoreHorizontal className="size-3.5" />

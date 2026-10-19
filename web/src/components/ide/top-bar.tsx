@@ -18,13 +18,14 @@ import type { RuntimeState } from "@/hooks/use-runtime";
 import { authApi } from "@/lib/api";
 import { session as sessionStore } from "@/lib/session";
 import { cn, initials } from "@/lib/utils";
+import ThemeToggle from "@/components/theme-toggle";
 import ChangePasswordDialog from "./change-password-dialog";
 
 const RUNTIME_LABELS: Record<RuntimeState, { text: string; dot: string }> = {
-  starting: { text: "Starting workspace", dot: "bg-amber-400 animate-pulse" },
-  connecting: { text: "Connecting", dot: "bg-amber-400 animate-pulse" },
-  ready: { text: "Workspace running", dot: "bg-emerald-400" },
-  reconnecting: { text: "Reconnecting", dot: "bg-amber-400 animate-pulse" },
+  starting: { text: "Starting workspace", dot: "bg-[#ff9f0a] animate-pulse" },
+  connecting: { text: "Connecting", dot: "bg-[#ff9f0a] animate-pulse" },
+  ready: { text: "Workspace running", dot: "bg-[#28c840]" },
+  reconnecting: { text: "Reconnecting", dot: "bg-[#ff9f0a] animate-pulse" },
   error: { text: "Workspace offline", dot: "bg-red-500" },
 };
 
@@ -54,7 +55,7 @@ export default function TopBar({ onToggleExplorer }: { onToggleExplorer: () => v
       <button
         type="button"
         onClick={onToggleExplorer}
-        className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
+        className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-ide-hover hover:text-foreground"
         title="Toggle explorer (⌘/Ctrl B)"
         aria-label="Toggle explorer"
       >
@@ -65,7 +66,7 @@ export default function TopBar({ onToggleExplorer }: { onToggleExplorer: () => v
       <div className="ml-auto flex items-center gap-2">
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 text-xs text-muted-foreground">
+            <span className="flex items-center gap-2 rounded-full border border-ide-border bg-ide-hover px-3 py-1 text-xs text-muted-foreground">
               <span className={cn("size-2 rounded-full", status.dot)} />
               <span className="hidden sm:inline">{status.text}</span>
             </span>
@@ -77,8 +78,8 @@ export default function TopBar({ onToggleExplorer }: { onToggleExplorer: () => v
           <TooltipTrigger asChild>
             <span
               className={cn(
-                "flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-xs",
-                collab.connected ? "text-sky-300" : "text-muted-foreground"
+                "flex items-center gap-1.5 rounded-full border border-ide-border bg-ide-hover px-2.5 py-1 text-xs",
+                collab.connected ? "text-link" : "text-muted-foreground"
               )}
             >
               <Users className="size-3.5" />
@@ -90,11 +91,13 @@ export default function TopBar({ onToggleExplorer }: { onToggleExplorer: () => v
           </TooltipContent>
         </Tooltip>
 
+        <ThemeToggle />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="flex size-8 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 via-indigo-500 to-purple-500 text-xs font-semibold text-white ring-1 ring-white/20 transition-transform hover:scale-105"
+              className="flex size-8 items-center justify-center rounded-full bg-gradient-to-b from-[#a1a1a6] to-[#6e6e73] text-xs font-semibold text-white transition-transform hover:scale-105"
               aria-label="Account menu"
             >
               {initials(session.user.name) || "?"}

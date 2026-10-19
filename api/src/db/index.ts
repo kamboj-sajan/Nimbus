@@ -18,7 +18,20 @@ export async function initDatabase(): Promise<void> {
       ssl: config.databaseSsl ? { rejectUnauthorized: false } : undefined,
     });
     db = drizzlePg(pool, { schema });
-    await migratePg(db, { migrationsFolder });
+    // The database may still be starting (e.g. when deployed alongside it); wait for it.
+    for (let attempt = 1; ; attempt++) {
+      try {
+        await migratePg(db, { migrationsFolder });
+        break;
+      } catch (err: any) {
+        const retryable = ["ECONNREFUSED", "ENOTFOUND", "ETIMEDOUT", "57P03"].includes(
+          err?.cause?.code ?? err?.code
+        );
+        if (!retryable || attempt >= 30) throw err;
+        console.log(`⏳ Waiting for PostgreSQL (attempt ${attempt}/30)…`);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+    }
     console.log("🗄️  Connected to PostgreSQL");
     return;
   }

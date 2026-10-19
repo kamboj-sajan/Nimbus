@@ -5,11 +5,18 @@ import { Terminal } from "@xterm/xterm";
 import { Eraser, Loader2, RotateCcw, ServerCrash, SquareTerminal } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { IDE_COLORS } from "@/config/brand";
+import { IDE_THEMES } from "@/config/brand";
+import { useTheme, type ResolvedTheme } from "@/lib/theme";
 import { useWorkspace } from "@/contexts/workspace";
 import Panel, { PanelAction } from "./panel";
 
+function xtermTheme(mode: ResolvedTheme) {
+  const c = IDE_THEMES[mode];
+  return { background: c.surface, foreground: c.foreground, cursor: c.accent, selectionBackground: c.selection };
+}
+
 export default function TerminalPanel() {
+  const { resolved } = useTheme();
   const { runtime } = useWorkspace();
   const containerRef = useRef<HTMLDivElement>(null);
   const termRef = useRef<Terminal | null>(null);
@@ -27,12 +34,7 @@ export default function TerminalPanel() {
       lineHeight: 1.25,
       scrollback: 5000,
       allowProposedApi: true,
-      theme: {
-        background: IDE_COLORS.surface,
-        foreground: IDE_COLORS.foreground,
-        cursor: IDE_COLORS.accent,
-        selectionBackground: "#6366f155",
-      },
+      theme: xtermTheme(document.documentElement.classList.contains("dark") ? "dark" : "light"),
     });
     const fit = new FitAddon();
     term.loadAddon(fit);
@@ -98,6 +100,10 @@ export default function TerminalPanel() {
     };
   }, [socket]);
 
+  useEffect(() => {
+    if (termRef.current) termRef.current.options.theme = xtermTheme(resolved);
+  }, [resolved]);
+
   const starting = runtime.state === "starting" || runtime.state === "connecting";
 
   return (
@@ -117,7 +123,7 @@ export default function TerminalPanel() {
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-ide-surface/95 px-4 text-center">
           {starting ? (
             <>
-              <Loader2 className="size-5 animate-spin text-primary" />
+              <Loader2 className="size-5 animate-spin text-link" />
               <div>
                 <p className="text-sm font-medium">
                   {runtime.state === "starting" ? "Starting your workspace…" : "Connecting to your workspace…"}

@@ -5,7 +5,7 @@ import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
 import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
 import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
 import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
-import { IDE_COLORS } from "@/config/brand";
+import { IDE_THEMES } from "@/config/brand";
 
 // Use the bundled Monaco (and its language workers) instead of loading a copy from a CDN.
 self.MonacoEnvironment = {
@@ -38,26 +38,45 @@ for (const defaults of [
   });
 }
 
-export const EDITOR_THEME = "nimbus-dark";
+export const EDITOR_THEMES = { light: "nimbus-light", dark: "nimbus-dark" } as const;
 
-monaco.editor.defineTheme(EDITOR_THEME, {
-  base: "vs-dark",
-  inherit: true,
-  rules: [],
-  colors: {
-    "editor.background": IDE_COLORS.surface,
-    "editor.foreground": IDE_COLORS.foreground,
-    "editor.lineHighlightBackground": "#ffffff08",
-    "editor.lineHighlightBorder": "#00000000",
-    "editorLineNumber.foreground": IDE_COLORS.muted,
-    "editorLineNumber.activeForeground": IDE_COLORS.accent,
-    "editorCursor.foreground": IDE_COLORS.accent,
-    "editor.selectionBackground": "#6366f140",
-    "editorIndentGuide.background1": "#ffffff0d",
-    "editorWidget.background": IDE_COLORS.bar,
-    "scrollbarSlider.background": "#ffffff14",
-    "scrollbarSlider.hoverBackground": "#ffffff24",
-  },
-});
+// Xcode's default syntax palette (matches the marketing visuals).
+const SYNTAX = {
+  light: { keyword: "ad3da4", string: "c41a16", number: "1c00cf", comment: "5d6c79", type: "0b4f79", fn: "326d74" },
+  dark: { keyword: "fc5fa3", string: "fc6a5d", number: "d0bf69", comment: "7f8c98", type: "5dd8ff", fn: "67b7a4" },
+} as const;
+
+for (const mode of ["light", "dark"] as const) {
+  const c = IDE_THEMES[mode];
+  const x = SYNTAX[mode];
+  monaco.editor.defineTheme(EDITOR_THEMES[mode], {
+    base: mode === "dark" ? "vs-dark" : "vs",
+    inherit: true,
+    rules: [
+      { token: "keyword", foreground: x.keyword, fontStyle: "bold" },
+      { token: "string", foreground: x.string },
+      { token: "number", foreground: x.number },
+      { token: "comment", foreground: x.comment, fontStyle: "italic" },
+      { token: "type", foreground: x.type },
+      { token: "type.identifier", foreground: x.type },
+      { token: "tag", foreground: x.keyword },
+      { token: "attribute.name", foreground: x.fn },
+      { token: "attribute.value", foreground: x.string },
+    ],
+    colors: {
+      "editor.background": c.surface,
+      "editor.foreground": c.foreground,
+      "editor.lineHighlightBackground": c.lineHighlight,
+      "editor.lineHighlightBorder": "#00000000",
+      "editorLineNumber.foreground": c.muted,
+      "editorLineNumber.activeForeground": c.accent,
+      "editorCursor.foreground": c.accent,
+      "editor.selectionBackground": c.selection,
+      "editorWidget.background": c.bar,
+      "scrollbarSlider.background": mode === "dark" ? "#ffffff14" : "#0000001a",
+      "scrollbarSlider.hoverBackground": mode === "dark" ? "#ffffff24" : "#0000002a",
+    },
+  });
+}
 
 export { monaco };

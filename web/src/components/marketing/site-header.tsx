@@ -1,10 +1,10 @@
 import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import BrandLogo from "@/components/brand/brand-logo";
+import ThemeToggle from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/session";
-import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/#features", label: "Features" },
@@ -12,62 +12,71 @@ const links = [
   { href: "/about", label: "About" },
 ];
 
+/** Apple-style global nav: thin, translucent, blurred. */
 export default function SiteHeader() {
   const session = useSession();
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const actions = session ? (
-    <Button asChild className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600">
+  const cta = session ? (
+    <Button asChild size="pill-sm">
       <Link to="/code">Open workspace</Link>
     </Button>
   ) : (
     <>
-      <Button asChild variant="outline">
-        <Link to="/sign-in">Sign in</Link>
-      </Button>
-      <Button asChild className="bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:from-blue-600 hover:to-purple-600">
+      <Link to="/sign-in" className="rounded-md px-1 text-[13px] text-foreground/80 transition-colors duration-200 hover:text-foreground">
+        Sign in
+      </Link>
+      <Button asChild size="pill-sm">
         <Link to="/register">Get started</Link>
       </Button>
     </>
   );
 
   return (
-    <header
-      className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-300",
-        scrolled || open ? "border-b border-border/50 bg-background/80 backdrop-blur-xl" : "bg-transparent"
-      )}
-    >
-      <div className="container mx-auto flex items-center justify-between px-4 py-4">
-        <BrandLogo />
-        <nav className="hidden items-center gap-8 md:flex">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-nav backdrop-blur-xl backdrop-saturate-[1.8]">
+      <div className="mx-auto flex h-12 max-w-[1024px] items-center justify-between px-4 sm:px-6">
+        <BrandLogo size="sm" />
+        <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
           {links.map((link) => (
-            <a key={link.href} href={link.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <a
+              key={link.href}
+              href={link.href}
+              className="rounded-md text-[13px] text-foreground/80 transition-colors duration-200 hover:text-foreground"
+            >
               {link.label}
             </a>
           ))}
-          <div className="flex items-center gap-2">{actions}</div>
         </nav>
-        <button className="md:hidden" onClick={() => setOpen((v) => !v)} aria-label="Toggle menu">
-          {open ? <X className="size-6" /> : <Menu className="size-6" />}
-        </button>
+        <div className="hidden items-center gap-3 md:flex">
+          <ThemeToggle />
+          {cta}
+        </div>
+        <div className="flex items-center gap-1 md:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            className="inline-flex size-11 items-center justify-center rounded-full hover:bg-foreground/5"
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+          >
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </div>
       {open && (
-        <nav className="container mx-auto flex flex-col gap-4 px-4 pb-6 md:hidden">
+        <nav className="mx-auto flex max-w-[1024px] flex-col gap-1 px-4 pb-6 pt-2 md:hidden" aria-label="Mobile">
           {links.map((link) => (
-            <a key={link.href} href={link.href} onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground">
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-2 py-3 text-2xl font-semibold tracking-tight hover:bg-foreground/5"
+            >
               {link.label}
             </a>
           ))}
-          <div className="flex flex-col gap-2">{actions}</div>
+          <div className="mt-4 flex items-center gap-4 px-2">{cta}</div>
         </nav>
       )}
     </header>

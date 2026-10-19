@@ -26,6 +26,9 @@ const buttonVariants = cva(
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-9",
+        // Apple-style pill buttons
+        pill: "h-11 rounded-full px-6 text-[15px] has-[>svg]:px-5",
+        "pill-sm": "h-8 rounded-full px-4 text-[13px] has-[>svg]:px-3.5",
       },
     },
     defaultVariants: {

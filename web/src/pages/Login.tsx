@@ -36,12 +36,12 @@ export default function LoginPage() {
     <AuthLayout
       badge="Welcome back"
       badgeIcon={Zap}
-      title="Sign in"
-      description={`Pick up right where you left off in ${APP_NAME}`}
+      title={`Sign in to ${APP_NAME}`}
+      description="Pick up right where you left off."
       footer={
         <span>
           Don't have an account?{" "}
-          <Link to="/register" className="font-medium text-primary hover:underline">
+          <Link to="/register" className="font-medium text-link hover:underline">
             Create one
           </Link>
         </span>
@@ -70,7 +70,7 @@ export default function LoginPage() {
               <FormItem>
                 <div className="flex items-center justify-between">
                   <FormLabel>Password</FormLabel>
-                  <Link to="/forgot-password" className="text-xs text-muted-foreground hover:text-primary">
+                  <Link to="/forgot-password" className="text-[13px] text-muted-foreground hover:text-link">
                     Forgot password?
                   </Link>
                 </div>

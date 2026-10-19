@@ -26,8 +26,8 @@ export default function ResetPasswordPage() {
   if (reset.isSuccess) {
     return (
       <AuthLayout badge="All set" badgeIcon={ShieldCheck} title="Password updated" description={reset.data.message}>
-        <div className="mx-auto flex size-16 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10">
-          <CheckCircle className="size-8 text-emerald-400" />
+        <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-[#248a3d]/10 dark:bg-[#30d158]/15">
+          <CheckCircle className="size-8 text-[#248a3d] dark:text-[#30d158]" />
         </div>
         <Button asChild className="w-full">
           <Link to="/sign-in">Sign in</Link>

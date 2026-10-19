@@ -51,7 +51,7 @@ export default function PreviewPanel() {
     >
       <div className="flex h-full flex-col">
         <form
-          className="flex h-9 shrink-0 items-center gap-2 border-b border-white/[0.06] bg-ide-bar/60 px-3"
+          className="flex h-9 shrink-0 items-center gap-2 border-b border-ide-border bg-ide-bar/60 px-3"
           onSubmit={(e) => {
             e.preventDefault();
             go();
@@ -67,7 +67,7 @@ export default function PreviewPanel() {
             <input
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="h-6 w-full rounded-md border border-white/[0.08] bg-black/30 pl-6 pr-2 font-mono text-xs outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/50"
+              className="h-6 w-full rounded-md border border-ide-border bg-ide-bg pl-6 pr-2 font-mono text-xs outline-none transition-colors placeholder:text-muted-foreground focus:border-primary/50"
               placeholder="Port (8080) or URL — press Enter"
               aria-label="Preview address"
             />
@@ -85,11 +85,11 @@ export default function PreviewPanel() {
             />
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-2 px-4 text-center">
-              <MonitorPlay className="size-7 text-primary/70" />
+              <MonitorPlay className="size-7 text-link/70" />
               <p className="text-sm font-medium">Preview your app</p>
               <p className="max-w-[16rem] text-xs text-muted-foreground">
                 Start a server in the terminal — try{" "}
-                <code className="rounded bg-white/5 px-1 font-mono text-[11px]">node server.js</code> — then enter its port
+                <code className="rounded bg-ide-hover px-1 font-mono text-[11px]">node server.js</code> — then enter its port
                 above and press Enter.
               </p>
               {error && <p className="text-xs text-destructive">{error}</p>}

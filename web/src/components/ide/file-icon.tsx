@@ -16,30 +16,30 @@ import {
 import { cn } from "@/lib/utils";
 
 const ICONS: Array<[RegExp, LucideIcon, string]> = [
-  [/\.(ts|tsx|mts|cts)$/, FileCode2, "text-sky-400"],
-  [/\.(js|jsx|mjs|cjs)$/, FileCode2, "text-yellow-400"],
-  [/\.(py|pyw)$/, FileCode2, "text-blue-400"],
-  [/\.(go)$/, FileCode2, "text-cyan-400"],
-  [/\.(rs)$/, FileCode2, "text-orange-400"],
-  [/\.(c|h|cpp|cc|cxx|hpp|java|kt|cs|rb|php|swift|lua|dart)$/, FileCode2, "text-violet-400"],
-  [/\.(html?|vue|svelte)$/, FileType2, "text-orange-400"],
-  [/\.(css|scss|sass|less)$/, Braces, "text-pink-400"],
-  [/\.(json|jsonc|json5)$/, FileJson, "text-amber-300"],
-  [/\.(md|mdx|txt|rst)$/, FileText, "text-slate-300"],
-  [/\.(sh|bash|zsh|ps1|bat)$/, FileTerminal, "text-emerald-400"],
-  [/\.(png|jpe?g|gif|svg|webp|ico)$/, FileImage, "text-fuchsia-400"],
-  [/\.(ya?ml|toml|ini|cfg|env)$|^\.env|^dockerfile$|^makefile$|rc$/, Settings2, "text-slate-400"],
-  [/(lock|\.lock)$|lock\.json$/, Lock, "text-slate-500"],
+  [/\.(ts|tsx|mts|cts)$/, FileCode2, "text-[#0071e3] dark:text-[#64d2ff]"],
+  [/\.(js|jsx|mjs|cjs)$/, FileCode2, "text-[#b25000] dark:text-[#ffd60a]"],
+  [/\.(py|pyw)$/, FileCode2, "text-[#0040dd] dark:text-[#409cff]"],
+  [/\.(go)$/, FileCode2, "text-[#0071a4] dark:text-[#70d7ff]"],
+  [/\.(rs)$/, FileCode2, "text-[#c93400] dark:text-[#ff9f0a]"],
+  [/\.(c|h|cpp|cc|cxx|hpp|java|kt|cs|rb|php|swift|lua|dart)$/, FileCode2, "text-[#8944ab] dark:text-[#bf5af2]"],
+  [/\.(html?|vue|svelte)$/, FileType2, "text-[#c93400] dark:text-[#ff9f0a]"],
+  [/\.(css|scss|sass|less)$/, Braces, "text-[#d30f45] dark:text-[#ff375f]"],
+  [/\.(json|jsonc|json5)$/, FileJson, "text-[#a05a00] dark:text-[#ffd426]"],
+  [/\.(md|mdx|txt|rst)$/, FileText, "text-muted-foreground"],
+  [/\.(sh|bash|zsh|ps1|bat)$/, FileTerminal, "text-[#248a3d] dark:text-[#30d158]"],
+  [/\.(png|jpe?g|gif|svg|webp|ico)$/, FileImage, "text-[#8944ab] dark:text-[#da8fff]"],
+  [/\.(ya?ml|toml|ini|cfg|env)$|^\.env|^dockerfile$|^makefile$|rc$/, Settings2, "text-muted-foreground"],
+  [/(lock|\.lock)$|lock\.json$/, Lock, "text-muted-foreground"],
 ];
 
 export function FileIcon({ name, className }: { name: string; className?: string }) {
   const lower = name.toLowerCase();
   const match = ICONS.find(([pattern]) => pattern.test(lower));
-  const [, Icon, color] = match ?? [null, File, "text-slate-400"];
+  const [, Icon, color] = match ?? [null, File, "text-muted-foreground"];
   return <Icon className={cn("size-4 shrink-0", color, className)} />;
 }
 
 export function FolderIcon({ open, className }: { open: boolean; className?: string }) {
   const Icon = open ? FolderOpen : Folder;
-  return <Icon className={cn("size-4 shrink-0 text-sky-400", className)} />;
+  return <Icon className={cn("size-4 shrink-0 text-[#0071e3] dark:text-[#2997ff]", className)} />;
 }

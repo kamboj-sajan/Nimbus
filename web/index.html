@@ -1,18 +1,32 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Nimbus — a real-time collaborative cloud IDE with a built-in terminal and live preview." />
-    <meta name="theme-color" content="#0b0c12" />
+    <meta name="description" content="Nimbus — a cloud IDE with a real terminal, live preview and real-time sync. No setup required." />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Apply the saved theme before first paint so there is no light/dark flash. -->
+    <script>
+      (function () {
+        try {
+          var pref = localStorage.getItem("nimbus.theme") || "system";
+          var dark = pref === "dark" || (pref === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+          if (dark) document.documentElement.classList.add("dark");
+          document.documentElement.style.colorScheme = dark ? "dark" : "light";
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Apple devices use SF Pro via the system stack; Inter is the closest match elsewhere. -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>Nimbus — Collaborative Cloud IDE</title>
+    <title>Nimbus — Code in the cloud</title>
   </head>
   <body>
     <div id="root"></div>

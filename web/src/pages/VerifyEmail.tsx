@@ -33,9 +33,9 @@ export default function VerifyEmailPage() {
             : "Hang tight while we confirm your email."
       }
     >
-      <div className="mx-auto flex size-16 items-center justify-center rounded-full border border-white/10 bg-white/[0.03]">
-        {state === "loading" && <Loader2 className="size-8 animate-spin text-primary" />}
-        {state === "success" && <CheckCircle className="size-8 text-emerald-400" />}
+      <div className="mx-auto flex size-16 items-center justify-center rounded-full border border-ide-border bg-ide-hover">
+        {state === "loading" && <Loader2 className="size-8 animate-spin text-link" />}
+        {state === "success" && <CheckCircle className="size-8 text-[#248a3d] dark:text-[#30d158]" />}
         {state === "error" && <XCircle className="size-8 text-destructive" />}
       </div>
       <Button asChild className="w-full" disabled={state === "loading"}>

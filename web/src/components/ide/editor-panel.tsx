@@ -3,7 +3,8 @@ import { AlertTriangle, Check, ChevronRight, CircleDot, FileCode2, Loader2 } fro
 import { useEffect } from "react";
 import { useWorkspace } from "@/contexts/workspace";
 import { languageLabel } from "@/lib/languages";
-import { EDITOR_THEME } from "@/lib/monaco";
+import { EDITOR_THEMES } from "@/lib/monaco";
+import { useTheme } from "@/lib/theme";
 import type { SaveState } from "@/lib/editor-session";
 import { cn } from "@/lib/utils";
 import { FileIcon } from "./file-icon";
@@ -11,8 +12,8 @@ import { FileIcon } from "./file-icon";
 function SaveIndicator({ state }: { state: SaveState }) {
   if (state === "idle") return null;
   const map = {
-    saved: { icon: Check, text: "Saved", className: "text-emerald-400" },
-    dirty: { icon: CircleDot, text: "Unsaved", className: "text-amber-300" },
+    saved: { icon: Check, text: "Saved", className: "text-[#248a3d] dark:text-[#30d158]" },
+    dirty: { icon: CircleDot, text: "Unsaved", className: "text-[#c93400] dark:text-[#ff9f0a]" },
     saving: { icon: Loader2, text: "Saving…", className: "text-muted-foreground" },
     error: { icon: AlertTriangle, text: "Save failed — retrying", className: "text-destructive" },
   } as const;
@@ -28,11 +29,8 @@ function SaveIndicator({ state }: { state: SaveState }) {
 function EmptyState() {
   return (
     <div className="flex h-full flex-col items-center justify-center px-4 text-center">
-      <div className="relative mb-5">
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-400 to-purple-500 opacity-30 blur-xl" />
-        <div className="relative flex size-16 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03]">
-          <FileCode2 className="size-7 text-primary" />
-        </div>
+      <div className="mb-5 flex size-16 items-center justify-center rounded-[22px] bg-ide-bg">
+        <FileCode2 className="size-7 text-link" />
       </div>
       <h2 className="mb-1.5 text-lg font-semibold">No file open</h2>
       <p className="max-w-xs text-sm text-muted-foreground">
@@ -41,11 +39,11 @@ function EmptyState() {
       </p>
       <div className="mt-6 flex gap-4 text-xs text-muted-foreground/80">
         <span>
-          <kbd className="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-[11px]">⌘/Ctrl S</kbd>{" "}
+          <kbd className="rounded border border-ide-border bg-ide-hover px-1.5 py-0.5 font-mono text-[11px]">⌘/Ctrl S</kbd>{" "}
           save
         </span>
         <span>
-          <kbd className="rounded border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-[11px]">⌘/Ctrl B</kbd>{" "}
+          <kbd className="rounded border border-ide-border bg-ide-hover px-1.5 py-0.5 font-mono text-[11px]">⌘/Ctrl B</kbd>{" "}
           toggle explorer
         </span>
       </div>
@@ -55,14 +53,15 @@ function EmptyState() {
 
 export default function EditorPanel() {
   const { editor, editorState } = useWorkspace();
+  const { resolved } = useTheme();
   const { path, language, saveState, opening } = editorState;
   const segments = path?.split("/") ?? [];
 
   useEffect(() => () => editor.detachEditor(), [editor]);
 
   return (
-    <section className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-ide-surface shadow-xl shadow-black/30">
-      <div className="flex h-9 shrink-0 items-center gap-2 border-b border-white/[0.06] bg-ide-bar px-3">
+    <section className="flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-ide-border bg-ide-surface shadow-[0_1px_3px_rgb(0_0_0/0.06)] dark:shadow-none">
+      <div className="flex h-9 shrink-0 items-center gap-2 border-b border-ide-border bg-ide-bar px-3">
         {path ? (
           <>
             <FileIcon name={segments[segments.length - 1]!} className="size-3.5" />
@@ -77,7 +76,7 @@ export default function EditorPanel() {
               ))}
             </nav>
             <SaveIndicator state={saveState} />
-            <span className="rounded-md border border-primary/30 bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] text-primary">
+            <span className="rounded-md border border-primary/30 bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] text-link">
               {languageLabel(language)}
             </span>
           </>
@@ -90,9 +89,9 @@ export default function EditorPanel() {
         {/* The editor stays mounted so models, undo history and view state survive file switches. */}
         <div className={cn("absolute inset-0", !path && "invisible")}>
           <Editor
-            theme={EDITOR_THEME}
+            theme={EDITOR_THEMES[resolved]}
             onMount={(instance) => editor.attachEditor(instance)}
-            loading={<Loader2 className="size-5 animate-spin text-primary" />}
+            loading={<Loader2 className="size-5 animate-spin text-link" />}
             options={{
               fontSize: 14,
               fontFamily: '"JetBrains Mono", Menlo, monospace',
@@ -117,7 +116,7 @@ export default function EditorPanel() {
         {opening && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-ide-surface/80 backdrop-blur-sm">
             <div className="flex animate-fade-in items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="size-4 animate-spin text-primary" />
+              <Loader2 className="size-4 animate-spin text-link" />
               Opening file…
             </div>
           </div>

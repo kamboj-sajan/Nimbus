@@ -37,7 +37,7 @@ function GuestOnly({ children }: { children: ReactNode }) {
 function NotFound() {
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-4 bg-background px-4 text-center">
-      <p className="font-mono text-6xl font-bold text-primary/60">404</p>
+      <p className="font-mono text-6xl font-bold text-link/60">404</p>
       <h1 className="text-xl font-semibold">This page drifted away</h1>
       <Button asChild variant="outline">
         <Link to="/">Back home</Link>

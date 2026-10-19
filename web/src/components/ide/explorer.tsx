@@ -59,8 +59,8 @@ export default function Explorer() {
           </Button>
         </div>
       ) : tree.length === 0 ? (
-        <div className="mx-1.5 mt-2 rounded-lg border border-dashed border-white/10 px-3 py-8 text-center">
-          <FolderPlus className="mx-auto mb-2 size-6 text-primary/70" />
+        <div className="mx-1.5 mt-2 rounded-lg border border-dashed border-ide-border px-3 py-8 text-center">
+          <FolderPlus className="mx-auto mb-2 size-6 text-link/70" />
           <p className="text-sm">Your workspace is empty</p>
           <p className="mb-3 mt-1 text-xs text-muted-foreground">Create a file or run commands in the terminal</p>
           <Button size="sm" variant="secondary" onClick={() => requestCreate("", "file")}>

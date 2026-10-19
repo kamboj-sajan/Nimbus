@@ -1,66 +1,95 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* SF Pro on Apple devices via the system stack; Inter elsewhere. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
 
-  /* IDE surfaces — keep in sync with IDE_COLORS in src/config/brand.ts */
-  --color-ide-bg: #0b0c12;
-  --color-ide-surface: #10121a;
-  --color-ide-bar: #151824;
+  --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
 
-  --animate-float: float 6s ease-in-out infinite;
   --animate-fade-in: fade-in 0.3s ease-out both;
-  --animate-fade-in-up: fade-in-up 0.7s ease-out both;
-  --animate-gradient-pan: gradient-pan 6s ease infinite;
+  --animate-fade-in-up: fade-in-up 0.8s var(--ease-apple) both;
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0); opacity: 0.4; }
-    50% { transform: translateY(-24px); opacity: 1; }
-  }
   @keyframes fade-in {
     from { opacity: 0; }
     to { opacity: 1; }
   }
   @keyframes fade-in-up {
-    from { opacity: 0; transform: translateY(16px); }
+    from { opacity: 0; transform: translateY(24px); }
     to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes gradient-pan {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
   }
 }
 
+/*
+ * Semantic tokens. Light and dark are designed as separate palettes (not inversions);
+ * text pairs meet WCAG AA 4.5:1 in both themes.
+ */
 :root {
-  --radius: 0.625rem;
-  color-scheme: dark;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --radius: 0.75rem;
 
-  --background: oklch(0.145 0.012 275);
-  --foreground: oklch(0.97 0.005 275);
-  --card: oklch(0.19 0.016 275);
-  --card-foreground: oklch(0.97 0.005 275);
-  --popover: oklch(0.19 0.016 275);
-  --popover-foreground: oklch(0.97 0.005 275);
-  --primary: oklch(0.68 0.19 285);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.25 0.02 275);
-  --secondary-foreground: oklch(0.97 0.005 275);
-  --muted: oklch(0.25 0.02 275);
-  --muted-foreground: oklch(0.7 0.02 275);
-  --accent: oklch(0.27 0.03 280);
-  --accent-foreground: oklch(0.97 0.005 275);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 9%);
-  --input: oklch(1 0 0 / 13%);
-  --ring: oklch(0.68 0.19 285 / 60%);
+  --background: #ffffff;
+  --foreground: #1d1d1f;
+  --surface: #f5f5f7;            /* Apple's alternating section gray */
+  --card: #ffffff;
+  --card-foreground: #1d1d1f;
+  --popover: #ffffff;
+  --popover-foreground: #1d1d1f;
+  --primary: #0071e3;            /* button fill — white text 4.6:1 */
+  --primary-foreground: #ffffff;
+  --link: #0066cc;               /* 5.6:1 on white */
+  --secondary: #e8e8ed;
+  --secondary-foreground: #1d1d1f;
+  --muted: #f5f5f7;
+  --muted-foreground: #6e6e73;   /* 5.0:1 on white, 4.6:1 on #f5f5f7 */
+  --accent: #f0f0f3;
+  --accent-foreground: #1d1d1f;
+  --destructive: #d70015;
+  --border: rgb(0 0 0 / 0.1);
+  --input: rgb(0 0 0 / 0.14);
+  --ring: rgb(0 113 227 / 0.55);
+  --nav: rgb(255 255 255 / 0.72);
+
+  /* IDE surfaces — keep in sync with IDE_THEMES in src/config/brand.ts */
+  --ide-bg: #f5f5f7;
+  --ide-surface: #ffffff;
+  --ide-bar: #fafafa;
+  --ide-border: rgb(0 0 0 / 0.08);
+  --ide-hover: rgb(0 0 0 / 0.04);
+  --ide-active: rgb(0 113 227 / 0.1);
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #f5f5f7;
+  --surface: #0f0f11;
+  --card: #1c1c1e;
+  --card-foreground: #f5f5f7;
+  --popover: #1c1c1e;
+  --popover-foreground: #f5f5f7;
+  --primary: #0071e3;
+  --primary-foreground: #ffffff;
+  --link: #2997ff;               /* 7.1:1 on black */
+  --secondary: #2c2c2e;
+  --secondary-foreground: #f5f5f7;
+  --muted: #1c1c1e;
+  --muted-foreground: #a1a1a6;   /* 7.9:1 on black, 6.3:1 on #1c1c1e */
+  --accent: #2c2c2e;
+  --accent-foreground: #f5f5f7;
+  --destructive: #ff453a;
+  --border: rgb(255 255 255 / 0.12);
+  --input: rgb(255 255 255 / 0.16);
+  --ring: rgb(41 151 255 / 0.6);
+  --nav: rgb(22 22 23 / 0.72);
+
+  --ide-bg: #000000;
+  --ide-surface: #121214;
+  --ide-bar: #1a1a1d;
+  --ide-border: rgb(255 255 255 / 0.08);
+  --ide-hover: rgb(255 255 255 / 0.05);
+  --ide-active: rgb(41 151 255 / 0.16);
 }
 
 @theme inline {
@@ -70,12 +99,14 @@
   --radius-xl: calc(var(--radius) + 4px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-link: var(--link);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -86,26 +117,104 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-nav: var(--nav);
+  --color-ide-bg: var(--ide-bg);
+  --color-ide-surface: var(--ide-surface);
+  --color-ide-bar: var(--ide-bar);
+  --color-ide-border: var(--ide-border);
+  --color-ide-hover: var(--ide-hover);
+  --color-ide-active: var(--ide-active);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
     scrollbar-width: thin;
-    scrollbar-color: oklch(1 0 0 / 15%) transparent;
+    scrollbar-color: color-mix(in srgb, var(--foreground) 18%, transparent) transparent;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-synthesis: none;
   }
   body {
     @apply bg-background text-foreground font-sans;
+    letter-spacing: -0.01em;
+    transition: background-color 0.3s var(--ease-apple), color 0.3s var(--ease-apple);
+  }
+  /* Everything clickable gets a pointer (Tailwind v4 preflight resets buttons to default). */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="menuitem"],
+  [role="treeitem"] > div,
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
   ::selection {
-    background: oklch(0.68 0.19 285 / 35%);
+    background: color-mix(in srgb, var(--primary) 28%, transparent);
   }
+}
+
+@layer components {
+  /* Apple-style display type: large, tight, confident */
+  .headline-hero {
+    font-size: clamp(2.75rem, 7vw, 5.5rem);
+    line-height: 1.04;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+  }
+  .headline-section {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    line-height: 1.07;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .headline-card {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+  .lede {
+    font-size: clamp(1.1875rem, 2vw, 1.5rem);
+    line-height: 1.38;
+    letter-spacing: -0.015em;
+    font-weight: 500;
+  }
+  .text-gradient {
+    background: linear-gradient(90deg, #0071e3 0%, #8a3ffc 55%, #e8457c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .dark .text-gradient {
+    background: linear-gradient(90deg, #2997ff 0%, #a57bff 55%, #ff6b9a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
+
+/* Scroll reveal (see components/marketing/reveal.tsx) */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s var(--ease-apple), transform 0.9s var(--ease-apple);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
 }
 
 /* xterm paints its own viewport; match it to the IDE surface */
 .nimbus-terminal .xterm,
 .nimbus-terminal .xterm-viewport {
-  background-color: var(--color-ide-surface) !important;
+  background-color: var(--ide-surface) !important;
 }
 .nimbus-terminal .xterm {
   height: 100%;
@@ -116,5 +225,10 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }
