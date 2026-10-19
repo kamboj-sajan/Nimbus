@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nimbus-config
+  namespace: nimbus
+data:
+  # Public URL of the site (used in emails and for CORS).
+  FRONTEND_URL: "https://nimbus.example.com"
+  CLIENT_ORIGINS: "https://nimbus.example.com"
+
+  STORAGE_DRIVER: "azure"
+  AZURE_STORAGE_CONTAINER_NAME: "nimbus"
+  PROJECT_NAME: "workspace"
+  REQUIRE_EMAIL_VERIFICATION: "true"
+
+  SMTP_HOST: "smtp.gmail.com"
+  SMTP_PORT: "587"
+  SMTP_SECURE: "false"
+
+  # Orchestrator
+  ORCHESTRATOR_MODE: "kubernetes"
+  K8S_NAMESPACE: "nimbus"
+  RUNTIME_IMAGE: "ghcr.io/your-org/nimbus-runtime:latest"
+  RUNTIME_API_URL: "http://nimbus-api.nimbus.svc.cluster.local:3001"
+  PREVIEW_PORTS: "8080,5173,8000,5000,4200,3001"
+  RUNTIME_CPU_LIMIT: "1"
+  RUNTIME_MEMORY_LIMIT: "1Gi"
+  SECURE_COOKIES: "true"

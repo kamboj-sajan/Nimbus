@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.DS_Store
+*.log
+
+# Local development data (embedded DB, stored files, live workspaces)
+.nimbus/
+workspace/
+
+# Secrets
+.env
+.env.*
+!.env.example
+deploy/k8s/11-secrets.yaml

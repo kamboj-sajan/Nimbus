@@ -1,0 +1,22 @@
+# Optional: a real PostgreSQL for local development.
+# Then set DATABASE_URL=postgres://nimbus:nimbus@localhost:5432/nimbus in api/.env
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nimbus-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nimbus
+      POSTGRES_PASSWORD: nimbus
+      POSTGRES_DB: nimbus
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "nimbus"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  pgdata:

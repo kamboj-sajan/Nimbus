@@ -1,0 +1,16 @@
+{
+  "name": "nimbus",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nimbus — a real-time collaborative cloud IDE with per-user runtimes",
+  "scripts": {
+    "setup": "npm install && npm --prefix api install && npm --prefix runtime install && npm --prefix orchestrator install && npm --prefix web install",
+    "dev": "concurrently -k -n api,orch,web -c magenta,cyan,green \"npm --prefix api run dev\" \"npm --prefix orchestrator run dev\" \"npm --prefix web run dev\"",
+    "typecheck": "npm --prefix api run typecheck && npm --prefix runtime run typecheck && npm --prefix orchestrator run typecheck && npm --prefix web run typecheck",
+    "build": "npm --prefix api run build && npm --prefix runtime run build && npm --prefix orchestrator run build && npm --prefix web run build",
+    "reset": "node -e \"require('fs').rmSync('.nimbus',{recursive:true,force:true});console.log('Local Nimbus data cleared')\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}

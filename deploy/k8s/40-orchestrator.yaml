@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nimbus-orchestrator
+  namespace: nimbus
+---
+# Least privilege: only the resources it creates per workspace, only in this namespace.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: nimbus-orchestrator
+  namespace: nimbus
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["create", "delete", "get", "list"]
+  - apiGroups: [""]
+    resources: ["services", "secrets"]
+    verbs: ["create", "delete", "get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: nimbus-orchestrator
+  namespace: nimbus
+subjects:
+  - kind: ServiceAccount
+    name: nimbus-orchestrator
+    namespace: nimbus
+roleRef:
+  kind: Role
+  name: nimbus-orchestrator
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nimbus-orchestrator
+  namespace: nimbus
+  labels:
+    app: nimbus-orchestrator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nimbus-orchestrator
+  template:
+    metadata:
+      labels:
+        app: nimbus-orchestrator
+    spec:
+      serviceAccountName: nimbus-orchestrator
+      containers:
+        - name: orchestrator
+          image: ghcr.io/your-org/nimbus-orchestrator:latest
+          ports:
+            - containerPort: 3002
+          env:
+            - name: PORT
+              value: "3002"
+            - name: NODE_ENV
+              value: production
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: nimbus-secrets
+                  key: JWT_SECRET
+          envFrom:
+            - configMapRef:
+                name: nimbus-config
+          readinessProbe:
+            httpGet: { path: /health, port: 3002 }
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits: { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nimbus-orchestrator
+  namespace: nimbus
+spec:
+  selector:
+    app: nimbus-orchestrator
+  ports:
+    - port: 3002
+      targetPort: 3002

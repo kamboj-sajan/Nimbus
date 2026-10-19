@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{NAME}}
+  labels:
+    app: {{NAME}}
+    nimbus/role: workspace
+    nimbus/user: {{NAME}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{NAME}}
+  template:
+    metadata:
+      labels:
+        app: {{NAME}}
+        nimbus/role: workspace
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      volumes:
+        - name: workspace
+          emptyDir:
+            sizeLimit: 2Gi
+      containers:
+        - name: runtime
+          image: {{IMAGE}}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{RUNTIME_PORT}}
+          env:
+            - name: PORT
+              value: "{{RUNTIME_PORT}}"
+            - name: WORKSPACE_DIR
+              value: /workspace
+            - name: CLIENT_ORIGINS
+              value: "{{CLIENT_ORIGINS}}"
+            - name: NIMBUS_API_URL
+              value: "{{API_URL}}"
+            - name: NIMBUS_HYDRATE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{NAME}}
+                  key: NIMBUS_HYDRATE_TOKEN
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{RUNTIME_PORT}}
+            initialDelaySeconds: 2
+            periodSeconds: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "{{CPU_LIMIT}}"
+              memory: {{MEMORY_LIMIT}}
+          volumeMounts:
+            - name: workspace
+              mountPath: /workspace

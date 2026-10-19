@@ -1,0 +1,55 @@
+# Workspace pods run untrusted user code: only the orchestrator may reach them, and they
+# may reach the API (for hydration), DNS and the internet — but not Postgres or each other.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: workspace-isolation
+  namespace: nimbus
+spec:
+  podSelector:
+    matchLabels:
+      nimbus/role: workspace
+  policyTypes: ["Ingress", "Egress"]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: nimbus-orchestrator
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: nimbus-api
+      ports:
+        - port: 3001
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - { port: 53, protocol: UDP }
+        - { port: 53, protocol: TCP }
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            # Block cluster-internal ranges; adjust to your cluster's pod/service CIDRs.
+            except: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "169.254.169.254/32"]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-api-only
+  namespace: nimbus
+spec:
+  podSelector:
+    matchLabels:
+      app: nimbus-postgres
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: nimbus-api
+      ports:
+        - port: 5432

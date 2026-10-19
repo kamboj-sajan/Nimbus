@@ -1,0 +1,28 @@
+# Single entry point (ingress-nginx). WebSockets are proxied automatically; the long
+# timeouts keep terminal and collaboration sockets open.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nimbus
+  namespace: nimbus
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    # cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  # tls:
+  #   - hosts: [nimbus.example.com]
+  #     secretName: nimbus-tls
+  rules:
+    - host: nimbus.example.com
+      http:
+        paths:
+          - { path: /api, pathType: Prefix, backend: { service: { name: nimbus-api, port: { number: 3001 } } } }
+          - { path: /socket.io, pathType: Prefix, backend: { service: { name: nimbus-api, port: { number: 3001 } } } }
+          - { path: /spawn, pathType: Exact, backend: { service: { name: nimbus-orchestrator, port: { number: 3002 } } } }
+          - { path: /status, pathType: Exact, backend: { service: { name: nimbus-orchestrator, port: { number: 3002 } } } }
+          - { path: /delete, pathType: Exact, backend: { service: { name: nimbus-orchestrator, port: { number: 3002 } } } }
+          - { path: /user, pathType: Prefix, backend: { service: { name: nimbus-orchestrator, port: { number: 3002 } } } }
+          - { path: /, pathType: Prefix, backend: { service: { name: nimbus-web, port: { number: 80 } } } }

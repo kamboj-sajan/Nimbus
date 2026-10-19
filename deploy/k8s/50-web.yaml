@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nimbus-web
+  namespace: nimbus
+  labels:
+    app: nimbus-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nimbus-web
+  template:
+    metadata:
+      labels:
+        app: nimbus-web
+    spec:
+      containers:
+        - name: web
+          image: ghcr.io/your-org/nimbus-web:latest
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet: { path: /, port: 80 }
+          resources:
+            requests: { cpu: 25m, memory: 32Mi }
+            limits: { cpu: 200m, memory: 128Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nimbus-web
+  namespace: nimbus
+spec:
+  selector:
+    app: nimbus-web
+  ports:
+    - port: 80
+      targetPort: 80
